@@ -195,9 +195,9 @@ static void zmk_rgb_underglow_effect_custom() {
             int hue = 0;
             int battery_charge = zmk_battery_state_of_charge();
 
-            if (battery_charge / battery_slices * (i+1) >= 100 / battery_slices * (i+1)) {
+            if (battery_charge >= 100 / battery_slices * (i+1)) {
                 hue = 120;
-            } else if (battery_charge / battery_slices * (i+1) >= 100 / battery_slices * (i+0.5) ) {
+            } else if (battery_charge >= 100 / battery_slices * (i+0.5) ) {
                 hue = 60;
             }
             struct zmk_led_hsb battery_hsb = {h: hue, s: 100, b: state.color.b};
