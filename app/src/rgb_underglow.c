@@ -175,9 +175,6 @@ static void zmk_rgb_underglow_effect_swirl() {
 }
 
 static void zmk_rgb_underglow_effect_custom() {
-    struct zmk_led_hsb hsb = state.color;
-    hsb.b = 0;
-
     // // Turn off all LEDs
     // for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
     //     pixels[i] = hsb_to_rgb(hsb_scale_zero_max(hsb));
@@ -203,7 +200,7 @@ static void zmk_rgb_underglow_effect_custom() {
             } else if (battery_charge / battery_slices * (i+1) >= 100 / battery_slices * (i+0.5) ) {
                 hue = 60;
             }
-            struct zmk_led_hsb battery_hsb = {h: hue, s: 100, b: 100};
+            struct zmk_led_hsb battery_hsb = {h: hue, s: 100, b: state.color.b};
 
             // #if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
                 // pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_N + i] = hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
