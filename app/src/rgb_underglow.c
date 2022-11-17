@@ -29,6 +29,7 @@
 #include <zmk/battery.h>
 #include <zmk/endpoints.h>
 #include <zmk/ble.h>
+#include <zmk/sticky_key.h>
 
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
@@ -198,15 +199,32 @@ static void zmk_rgb_underglow_effect_custom() {
             if (battery_charge >= 100 / battery_slices * (i+1)) {
                 hue = 120;
             } else if (battery_charge >= 100 / battery_slices * (i+0.5) ) {
-                hue = 60;
+                hue = 50;
             }
             struct zmk_led_hsb battery_hsb = {h: hue, s: 100, b: state.color.b};
 
-            // #if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
-                // pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_N + i] = hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
-            // #else
-                pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_N + i] = hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
-            // #endif
+            pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_N + i] = hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
+        }
+    }
+
+    // ------- Turn on the sticky key indicator -------
+    if(IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS)) {
+        struct zmk_sticky_modifiers sticky_modifier_state = zmk_sticky_modifier_state();
+        int hue_difference = 60;
+        struct zmk_led_hsb sticky_mod_hsb = {
+            h: state.color.h + hue_difference > HUE_MAX ? 
+                hue_difference - (HUE_MAX - state.color.h) : 
+                state.color.h + hue_difference,
+            s: 100,
+            b: state.color.b
+        };
+
+        if(sticky_modifier_state.ctrl) {
+            pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N] = hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
+        } else if(sticky_modifier_state.alt) {
+            pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N + 1] = hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
+        } else if(sticky_modifier_state.gui) {
+            pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N + 2] = hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
         }
     }
 }

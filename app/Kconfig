@@ -264,18 +264,30 @@ config ZMK_RGB_UNDERGLOW_AUTO_OFF_USB
 
 config ZMK_RGB_UNDERGLOW_NUM_LEDS
 	int "Numer of leds on the pcb"
-	range 0 58
-	default 58
+	range 0 29
+	default 29
 
 config ZMK_RGB_UNDERGLOW_STATUS_BATTERY
 	bool "Shows battery status on a row of LEDs"
 	default y
 
 config ZMK_RGB_UNDERGLOW_STATUS_BATTERY_N
-	int "LED number to show the battery status"
+	int "LED number to show the battery status, extending to the next 4 LEDs"
 	range 0 ZMK_RGB_UNDERGLOW_NUM_LEDS
 	default 0
 	depends on ZMK_RGB_UNDERGLOW_STATUS_BATTERY
+
+config ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS
+	bool "Shows sticky modifier status on 3 LEDs"
+	default y
+
+config ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N
+	int "LED number to show the battery status, extending to the next 2 LEDs"
+	range 0 ZMK_RGB_UNDERGLOW_NUM_LEDS
+	default 25
+	depends on ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS
+
+
 #ZMK_RGB_UNDERGLOW
 endif
 
