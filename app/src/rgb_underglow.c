@@ -200,7 +200,7 @@ static void zmk_rgb_underglow_effect_custom() {
             if (battery_charge / 5 * i+1 >= 100 / 5 * i+1) {
                 hue = 120;
             } else if (battery_charge / 5 * i+1 >= 100 / 5 * i+0.5 ) {
-                hue = 75;
+                hue = 200;
             }
             struct zmk_led_hsb battery_hsb = {h: hue, s: 100, b: 100};
 
