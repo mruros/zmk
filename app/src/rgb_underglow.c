@@ -203,11 +203,11 @@ static void zmk_rgb_underglow_effect_custom() {
             }
             struct zmk_led_hsb battery_hsb = {h: hue, s: 100, b: 100};
 
-            if(CONFIG_ZMK_SPLIT_ROLE_CENTRAL) {
+            #if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
                 pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_N + i] = hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
-            } else {
+            #else
                 pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_N - i] = hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
-            }
+            #endif
         }
     }
 }
