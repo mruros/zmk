@@ -248,7 +248,7 @@ config ZMK_RGB_UNDERGLOW_SPD_START
 
 config ZMK_RGB_UNDERGLOW_EFF_START
 	int "RGB underglow start effect int value related to the effect enum list"
-	range 0 3
+	range 0 4
 	default 0
 
 config ZMK_RGB_UNDERGLOW_ON_START
@@ -262,6 +262,20 @@ config ZMK_RGB_UNDERGLOW_AUTO_OFF_USB
 	bool "Turn off RGB underglow when USB is disconnected"
 	depends on USB_DEVICE_STACK
 
+config ZMK_RGB_UNDERGLOW_NUM_LEDS
+	int "Numer of leds on the pcb"
+	range 0 58
+	default 58
+
+config ZMK_RGB_UNDERGLOW_STATUS_BATTERY
+	bool "Shows battery status on a row of LEDs"
+	default y
+
+config ZMK_RGB_UNDERGLOW_STATUS_BATTERY_N
+	int "LED number to show the battery status"
+	range 0 ZMK_RGB_UNDERGLOW_NUM_LEDS
+	default 16
+	depends on ZMK_RGB_UNDERGLOW_STATUS_BATTERY
 #ZMK_RGB_UNDERGLOW
 endif
 
@@ -343,7 +357,7 @@ config ZMK_COMBO_MAX_KEYS_PER_COMBO
 #Combo options
 endmenu
 
-menu "Behavior Options"
+menu "Behavior Options"`
 
 config ZMK_BEHAVIORS_QUEUE_SIZE
 	int "Maximum number of behaviors to allow queueing from a macro or other complex behavior"

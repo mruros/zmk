@@ -25,6 +25,11 @@
 #include <zmk/events/activity_state_changed.h>
 #include <zmk/events/usb_conn_state_changed.h>
 
+#include <zmk/keymap.h>
+#include <zmk/battery.h>
+#include <zmk/endpoints.h>
+#include <zmk/ble.h>
+
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 #define STRIP_LABEL DT_LABEL(DT_CHOSEN(zmk_underglow))
@@ -42,6 +47,7 @@ enum rgb_underglow_effect {
     UNDERGLOW_EFFECT_BREATHE,
     UNDERGLOW_EFFECT_SPECTRUM,
     UNDERGLOW_EFFECT_SWIRL,
+    UNDERGLOW_EFFECT_CUSTOM,
     UNDERGLOW_EFFECT_NUMBER // Used to track number of underglow effects
 };
 
@@ -166,6 +172,44 @@ static void zmk_rgb_underglow_effect_swirl() {
 
     state.animation_step += state.animation_speed * 2;
     state.animation_step = state.animation_step % HUE_MAX;
+}
+
+static void zmk_rgb_underglow_effect_custom() {
+    struct zmk_led_hsb hsb = state.color;
+    hsb.b = 0;
+
+    // // Turn off all LEDs
+    // for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
+    //     pixels[i] = hsb_to_rgb(hsb_scale_zero_max(hsb));
+    // }
+
+    // Turn on all LEDs
+    for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
+        pixels[i] = hsb_to_rgb(hsb_scale_min_max(state.color));
+    }
+
+    // and turn on specific ones.
+
+    // ------- Turn on the battery status led -------
+    if(IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY)) {
+        for (int i = 0; i < 5; i++) {
+            // 0 = red, 60 = yellow, 120 = green
+            int hue = 0;
+            int battery_charge = zmk_battery_state_of_charge();
+            if (battery_charge / 5 * i+1 >= 100 / 5 * i+1) {
+                hue = 120;
+            } else if (battery_charge / 5 * i+1 >= 100 / 5 * i+0.5 ) {
+                hue = 60;
+            }
+            struct zmk_led_hsb battery_hsb = {h: hue, s: 100, v: 100};
+
+            if(CONFIG_ZMK_SPLIT_ROLE_CENTRAL) {
+                pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_N + i] = hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
+            } else {
+                pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_N - i] = hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
+            }
+        }
+    }
 }
 
 static void zmk_rgb_underglow_tick(struct k_work *work) {
