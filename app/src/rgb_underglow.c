@@ -192,15 +192,16 @@ static void zmk_rgb_underglow_effect_custom() {
 
     // ------- Turn on the battery status led -------
     if(IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY)) {
-        for (int i = 0; i < 5; i++) {
+        int battery_slices = 5;
+        for (int i = 0; i < battery_slices; i++) {
             // 0 = red, 60 = yellow, 120 = green
             int hue = 0;
             int battery_charge = zmk_battery_state_of_charge();
 
-            if (battery_charge / 5 * i+1 >= 100 / 5 * i+1) {
+            if (battery_charge / battery_slices * (i+1) >= 100 / battery_slices * (i+1)) {
                 hue = 120;
-            } else if (battery_charge / 5 * i+1 >= 100 / 5 * i+0.5 ) {
-                hue = 200;
+            } else if (battery_charge / battery_slices * (i+1) >= 100 / battery_slices * (i+0.5) ) {
+                hue = 60;
             }
             struct zmk_led_hsb battery_hsb = {h: hue, s: 100, b: 100};
 
