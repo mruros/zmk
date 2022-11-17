@@ -16,4 +16,4 @@ struct zmk_sticky_modifiers {
     bool ctrl, alt, gui;
 };
 
-bool zmk_sticky_modifier_state();
+struct zmk_sticky_modifiers zmk_sticky_modifier_state();
