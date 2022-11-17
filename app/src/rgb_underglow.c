@@ -225,6 +225,8 @@ static void zmk_rgb_underglow_tick(struct k_work *work) {
         break;
     case UNDERGLOW_EFFECT_SWIRL:
         zmk_rgb_underglow_effect_swirl();
+    case UNDERGLOW_EFFECT_CUSTOM:
+        zmk_rgb_underglow_effect_custom();
         break;
     }
 
