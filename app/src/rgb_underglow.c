@@ -196,18 +196,19 @@ static void zmk_rgb_underglow_effect_custom() {
             // 0 = red, 60 = yellow, 120 = green
             int hue = 0;
             int battery_charge = zmk_battery_state_of_charge();
+
             if (battery_charge / 5 * i+1 >= 100 / 5 * i+1) {
                 hue = 120;
             } else if (battery_charge / 5 * i+1 >= 100 / 5 * i+0.5 ) {
-                hue = 60;
+                hue = 75;
             }
             struct zmk_led_hsb battery_hsb = {h: hue, s: 100, b: 100};
 
-            #if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
+            // #if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
+                // pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_N + i] = hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
+            // #else
                 pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_N + i] = hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
-            #else
-                pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_N - i] = hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
-            #endif
+            // #endif
         }
     }
 }
