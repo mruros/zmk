@@ -209,23 +209,26 @@ static void zmk_rgb_underglow_effect_custom() {
 
     // ------- Turn on the sticky key indicator -------
     if(IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS)) {
-        struct zmk_sticky_modifiers sticky_modifier_state = zmk_sticky_modifier_state();
-        int hue_difference = 60;
-        struct zmk_led_hsb sticky_mod_hsb = {
-            h: state.color.h + hue_difference > HUE_MAX ? 
-                hue_difference - (HUE_MAX - state.color.h) : 
-                state.color.h + hue_difference,
-            s: 100,
-            b: state.color.b
-        };
+        #if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
+            struct zmk_sticky_modifiers sticky_modifier_state = zmk_sticky_modifier_state();
+            int hue_difference = 60;
+            struct zmk_led_hsb sticky_mod_hsb = {
+                h: state.color.h + hue_difference > HUE_MAX ? 
+                    hue_difference - (HUE_MAX - state.color.h) : 
+                    state.color.h + hue_difference,
+                s: 100,
+                b: state.color.b
+            };
 
-        if(sticky_modifier_state.ctrl) {
-            pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N] = hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
-        } else if(sticky_modifier_state.alt) {
-            pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N + 1] = hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
-        } else if(sticky_modifier_state.gui) {
-            pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N + 2] = hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
-        }
+            if(sticky_modifier_state.ctrl) {
+                pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N] = hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
+            } else if(sticky_modifier_state.alt) {
+                pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N + 1] = hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
+            } else if(sticky_modifier_state.gui) {
+                pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N + 2] = hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
+            }
+        #endif
+        
     }
 }
 
