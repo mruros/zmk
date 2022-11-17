@@ -284,7 +284,7 @@ config ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS
 config ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N
 	int "LED number to show the battery status, extending to the next 2 LEDs"
 	range 0 ZMK_RGB_UNDERGLOW_NUM_LEDS
-	default 25
+	default 28
 	depends on ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS
 
 
