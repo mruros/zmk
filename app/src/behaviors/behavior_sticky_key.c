@@ -130,11 +130,11 @@ static inline int release_sticky_key_behavior(struct active_sticky_key *sticky_k
 
     clear_sticky_key(sticky_key);
 
-    if(param1 === LCTRL) {
+    if(sticky_key->param1 == LCTRL) {
         last_state_of_sticky_ctrl = false;
-    } else if(param1 === LALT) {
+    } else if(sticky_key->param1 == LALT) {
         last_state_of_sticky_alt = false;
-    } else if(param1 === LGUI) {
+    } else if(sticky_key->param1 == LGUI) {
         last_state_of_sticky_gui = false;
     }
 
