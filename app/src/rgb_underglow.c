@@ -220,7 +220,7 @@ static void zmk_rgb_underglow_effect_custom() {
                 b: state.color.b
             };
 
-            if(sticky_modifier_state.ctrl) {
+            if(sticky_modifier_state.gui) {
                 pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N] = hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
             }
             
@@ -228,7 +228,7 @@ static void zmk_rgb_underglow_effect_custom() {
                 pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N - 1] = hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
             }
             
-            if(sticky_modifier_state.gui) {
+            if(sticky_modifier_state.ctrl) {
                 pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N - 2] = hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
             }
         #endif
