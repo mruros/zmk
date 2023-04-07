@@ -22,6 +22,7 @@
 #include <zmk/activity.h>
 #include <zmk/usb.h>
 #include <zmk/event_manager.h>
+#include <zmk/events/layer_state_changed.h>
 #include <zmk/events/activity_state_changed.h>
 #include <zmk/events/usb_conn_state_changed.h>
 
@@ -175,16 +176,18 @@ static void zmk_rgb_underglow_effect_swirl() {
     state.animation_step = state.animation_step % HUE_MAX;
 }
 
-static void zmk_rgb_underglow_effect_custom() {
-    // // Turn off all LEDs
-    // for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
-    //     pixels[i] = hsb_to_rgb(hsb_scale_zero_max(hsb));
-    // }
+static struct layer_status_state layer_status_get_state(const zmk_event_t *eh) {
+    uint8_t index = zmk_keymap_highest_layer_active();
+    return (struct layer_status_state){.index = index, .label = zmk_keymap_layer_label(index)};
+}
 
-    uint8_t highest_layer_active = zmk_keymap_highest_layer_active();
-    int layer_modifier = 60;
-    // Turn on all LEDs
-    for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
+static inline bool zmk_rgb_underglow_layer_state_change_listener(const zmk_event_t *eh) {
+    if (is_zmk_layer_state_changed(eh)) {
+        struct zmk_layer_state_changed *ev = cast_zmk_layer_state_changed(eh);
+
+        uint8_t highest_layer_active = zmk_keymap_highest_layer_active();
+        int layer_modifier = 60;
+
         struct zmk_led_hsb layer_shifted_hsb = {h : 0, s : state.color.s, b : state.color.b};
 
         if (state.color.h >= highest_layer_active * layer_modifier) {
@@ -193,7 +196,26 @@ static void zmk_rgb_underglow_effect_custom() {
             layer_shifted_hsb.h = state.color.h + (HUE_MAX - highest_layer_active * layer_modifier);
         }
 
-        pixels[i] = hsb_to_rgb(hsb_scale_min_max(layer_shifted_hsb));
+        zmk_rgb_underglow_set_hsb(layer_shifted_hsb);
+
+        return true;
+    }
+
+    return false;
+}
+
+ZMK_SUBSCRIPTION(zmk_rgb_underglow_layer_state_change_listener, zmk_layer_state_changed);
+
+static void zmk_rgb_underglow_effect_custom() {
+    // // Turn off all LEDs
+    // for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
+    //     pixels[i] = hsb_to_rgb(hsb_scale_zero_max(hsb));
+    // }
+
+    
+    // Turn on all LEDs
+    for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
+        pixels[i] = hsb_to_rgb(hsb_scale_min_max(state.color));
     }
 
     // and turn on specific ones.
