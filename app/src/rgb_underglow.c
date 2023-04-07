@@ -182,24 +182,18 @@ static struct layer_status_state layer_status_get_state(const zmk_event_t *eh) {
 }
 
 static inline bool zmk_rgb_underglow_layer_state_change_listener(const zmk_event_t *eh) {
-    if (is_zmk_layer_state_changed(eh)) {
-        struct zmk_layer_state_changed *ev = cast_zmk_layer_state_changed(eh);
+    uint8_t highest_layer_active = zmk_keymap_highest_layer_active();
+    int layer_modifier = 60;
 
-        uint8_t highest_layer_active = zmk_keymap_highest_layer_active();
-        int layer_modifier = 60;
+    struct zmk_led_hsb layer_shifted_hsb = {h : 0, s : state.color.s, b : state.color.b};
 
-        struct zmk_led_hsb layer_shifted_hsb = {h : 0, s : state.color.s, b : state.color.b};
-
-        if (state.color.h >= highest_layer_active * layer_modifier) {
-            layer_shifted_hsb.h = state.color.h - highest_layer_active * layer_modifier;
-        } else {
-            layer_shifted_hsb.h = state.color.h + (HUE_MAX - highest_layer_active * layer_modifier);
-        }
-
-        zmk_rgb_underglow_set_hsb(layer_shifted_hsb);
-
-        return true;
+    if (state.color.h >= highest_layer_active * layer_modifier) {
+        layer_shifted_hsb.h = state.color.h - highest_layer_active * layer_modifier;
+    } else {
+        layer_shifted_hsb.h = state.color.h + (HUE_MAX - highest_layer_active * layer_modifier);
     }
+
+    zmk_rgb_underglow_set_hsb(layer_shifted_hsb);
 
     return false;
 }
@@ -212,7 +206,6 @@ static void zmk_rgb_underglow_effect_custom() {
     //     pixels[i] = hsb_to_rgb(hsb_scale_zero_max(hsb));
     // }
 
-    
     // Turn on all LEDs
     for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
         pixels[i] = hsb_to_rgb(hsb_scale_min_max(state.color));
@@ -221,50 +214,53 @@ static void zmk_rgb_underglow_effect_custom() {
     // and turn on specific ones.
 
     // ------- Turn on the battery status led -------
-    if(IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY)) {
+    if (IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY)) {
         int battery_slices = 5;
         for (int i = 0; i < battery_slices; i++) {
             // 0 = red, 60 = yellow, 120 = green
             int hue = 0;
             int battery_charge = zmk_battery_state_of_charge();
 
-            if (battery_charge >= 100 / battery_slices * (i+1)) {
+            if (battery_charge >= 100 / battery_slices * (i + 1)) {
                 hue = 120;
-            } else if (battery_charge >= 100 / battery_slices * (i+0.5) ) {
+            } else if (battery_charge >= 100 / battery_slices * (i + 0.5)) {
                 hue = 50;
             }
-            struct zmk_led_hsb battery_hsb = {h: hue, s: 100, b: state.color.b};
+            struct zmk_led_hsb battery_hsb = {h : hue, s : 100, b : state.color.b};
 
-            pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_N + i] = hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
+            pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_N + i] =
+                hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
         }
     }
 
     // ------- Turn on the sticky key indicator -------
-    if(IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS)) {
-        #if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
-            struct zmk_sticky_modifiers sticky_modifier_state = zmk_sticky_modifier_state();
-            int hue_difference = 120;
-            struct zmk_led_hsb sticky_mod_hsb = {
-                h: state.color.h + hue_difference > HUE_MAX ? 
-                    hue_difference - (HUE_MAX - state.color.h) : 
-                    state.color.h + hue_difference,
-                s: 100,
-                b: state.color.b
-            };
+    if (IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS)) {
+#if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
+        struct zmk_sticky_modifiers sticky_modifier_state = zmk_sticky_modifier_state();
+        int hue_difference = 120;
+        struct zmk_led_hsb sticky_mod_hsb = {
+            h : state.color.h + hue_difference > HUE_MAX
+                ? hue_difference - (HUE_MAX - state.color.h)
+                : state.color.h + hue_difference,
+            s : 100,
+            b : state.color.b
+        };
 
-            if(sticky_modifier_state.ctrl) {
-                pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N] = hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
-            }
-            
-            if(sticky_modifier_state.alt) {
-                pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N - 1] = hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
-            }
-            
-            if(sticky_modifier_state.gui) {
-                pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N - 2] = hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
-            }
-        #endif
-        
+        if (sticky_modifier_state.ctrl) {
+            pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N] =
+                hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
+        }
+
+        if (sticky_modifier_state.alt) {
+            pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N - 1] =
+                hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
+        }
+
+        if (sticky_modifier_state.gui) {
+            pixels[CONFIG_ZMK_RGB_UNDERGLOW_STATUS_STICKY_MODS_N - 2] =
+                hsb_to_rgb(hsb_scale_zero_max(sticky_mod_hsb));
+        }
+#endif
     }
 }
 
