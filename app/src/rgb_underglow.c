@@ -187,7 +187,7 @@ static void zmk_rgb_underglow_effect_swirl() {
 
 void simulate_rgb_keypress(bool increase) {
     // Create a keycode_state_changed event for key press
-    struct zmk_keycode_state_changed key_press_event = {
+    struct behavior_key_binding_triggered key_press_event = {
         .behavior_dev = DEVICE_DT_GET(zmk_behavior_rgb_underglow),
         .param1 = increase ? RGB_HUI : RGB_HUD,
     };
