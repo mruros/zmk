@@ -8,6 +8,7 @@
 #include <init.h>
 #include <kernel.h>
 #include <settings/settings.h>
+#include <zmk/keymap.h>
 
 #include <math.h>
 #include <stdlib.h>
@@ -26,7 +27,6 @@
 #include <zmk/events/activity_state_changed.h>
 #include <zmk/events/usb_conn_state_changed.h>
 
-#include <zmk/keymap.h>
 #include <zmk/battery.h>
 #include <zmk/endpoints.h>
 #include <zmk/ble.h>
