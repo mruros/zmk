@@ -23,6 +23,7 @@
 #include <zmk/activity.h>
 #include <zmk/usb.h>
 #include <zmk/event_manager.h>
+#include <zmk/events/keycode_state_changed.h>
 #include <zmk/events/layer_state_changed.h>
 #include <zmk/events/activity_state_changed.h>
 #include <zmk/events/usb_conn_state_changed.h>
@@ -31,6 +32,11 @@
 #include <zmk/endpoints.h>
 #include <zmk/ble.h>
 #include <zmk/sticky_key.h>
+
+#if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
+#include <dt-bindings/zmk/keys.h>
+#endif
+
 
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
@@ -178,14 +184,32 @@ static void zmk_rgb_underglow_effect_swirl() {
 
 #if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
 
+void simulate_rgb_keypress(uint32_t keycode) {
+    // Create a keycode_state_changed event for key press
+    struct keycode_state_changed key_press_event = {
+        .keycode = keycode,
+        .state = true,  // true for key press, false for key release
+    };
+
+    // Emit the key_press_event
+    zmk_event_manager_emit((struct zmk_event_header *)&key_press_event);
+
+    // You can also simulate a key release by creating another event with .state set to false
+    // and emitting it after a certain delay, if needed.
+}
+
 static int zmk_rgb_underglow_layer_state_change_listener(const zmk_event_t *eh) {
-    if(ev.state == true) {
-        struct zmk_led_hsb color = zmk_rgb_underglow_calc_hue(1 * eh.layer);
+    if(eh.state == true) {
+        for(int i = 0; i < eh.layer; i++) {
+            simulate_rgb_keypress(RGB_HUI);
+        }
     } else {
-        struct zmk_led_hsb color = zmk_rgb_underglow_calc_hue(-1 * eh.layer);
+        for(int i = 0; i < eh.layer; i++) {
+            simulate_rgb_keypress(RGB_HUD);
+        }
     }
 
-    zmk_rgb_underglow_set_hsb(layer_shifted_hsb);
+    zmk_rgb_underglow_set_hsb(color);
 
     return 0;
 }
