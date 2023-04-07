@@ -14,7 +14,8 @@
     "ext_power.h": "c",
     "rgb.h": "c",
     "rgb_underglow.h": "c",
-    "keymap.h": "c"
+    "keymap.h": "c",
+    "keys.h": "c"
   },
   "python.formatting.provider": "black",
   "cmake.sourceDirectory": "${workspaceFolder}/app"

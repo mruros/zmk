@@ -35,7 +35,7 @@
 #include <zmk/sticky_key.h>
 
 #if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
-#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/rgb.h>
 #endif
 
 
