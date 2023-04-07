@@ -176,7 +176,7 @@ static void zmk_rgb_underglow_effect_swirl() {
     state.animation_step = state.animation_step % HUE_MAX;
 }
 
-static inline bool zmk_rgb_underglow_layer_state_change_listener(const zmk_event_t *eh) {
+int zmk_rgb_underglow_layer_state_change_listener(const zmk_event_t *eh) {
     uint8_t highest_layer_active = zmk_keymap_highest_layer_active();
     int layer_modifier = 60;
 
@@ -190,7 +190,7 @@ static inline bool zmk_rgb_underglow_layer_state_change_listener(const zmk_event
 
     zmk_rgb_underglow_set_hsb(layer_shifted_hsb);
 
-    return false;
+    return 0;
 }
 
 ZMK_SUBSCRIPTION(zmk_rgb_underglow_layer_state_change_listener, zmk_layer_state_changed);
