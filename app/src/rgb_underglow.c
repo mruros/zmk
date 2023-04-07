@@ -182,11 +182,11 @@ static void zmk_rgb_underglow_effect_swirl() {
 
 static int zmk_rgb_underglow_layer_state_change_listener(const zmk_event_t *eh) {
     struct zmk_layer_state_changed *layer_change = as_zmk_layer_state_changed(eh);
-
+    struct zmk_led_hsb color;
     if(layer_change->state == true) {
-        struct zmk_led_hsb color = zmk_rgb_underglow_calc_hue(1 * layer_change->layer);
+        color = zmk_rgb_underglow_calc_hue(1 * layer_change->layer);
     } else {
-        struct zmk_led_hsb color = zmk_rgb_underglow_calc_hue(-1 * layer_change->layer);
+        color = zmk_rgb_underglow_calc_hue(-1 * layer_change->layer);
     }
     zmk_rgb_underglow_set_hsb(color);
     // the following syncs the state of the underglow on both sides
