@@ -193,7 +193,7 @@ void simulate_rgb_keypress(uint32_t keycode) {
     };
 
     // Emit the key_press_event
-    zmk_event_manager_emit((struct zmk_event_header *)&key_press_event);
+    zmk_event_manager_raise((struct zmk_event_header *)&key_press_event);
 
     // You can also simulate a key release by creating another event with .state set to false
     // and emitting it after a certain delay, if needed.
