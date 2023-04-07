@@ -176,7 +176,7 @@ static void zmk_rgb_underglow_effect_swirl() {
     state.animation_step = state.animation_step % HUE_MAX;
 }
 
-int zmk_rgb_underglow_layer_state_change_listener(const zmk_event_t *eh) {
+static int zmk_rgb_underglow_layer_state_change_listener(const zmk_event_t *eh) {
     uint8_t highest_layer_active = zmk_keymap_highest_layer_active();
     int layer_modifier = 60;
 
@@ -193,8 +193,8 @@ int zmk_rgb_underglow_layer_state_change_listener(const zmk_event_t *eh) {
     return 0;
 }
 
-ZMK_LISTENER(zmk_rgb_underglow_layer_state_change_listener, layer_state_changed_listener);
-ZMK_SUBSCRIPTION(zmk_rgb_underglow_layer_state_change_listener, zmk_layer_state_changed);
+ZMK_LISTENER(underglow_layer_change, zmk_rgb_underglow_layer_state_change_listener);
+ZMK_SUBSCRIPTION(underglow_layer_change, zmk_layer_state_changed);
 
 static void zmk_rgb_underglow_effect_custom() {
     // // Turn off all LEDs
