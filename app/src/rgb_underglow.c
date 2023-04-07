@@ -24,6 +24,7 @@
 #include <zmk/usb.h>
 #include <zmk/event_manager.h>
 #include <zmk/events/keycode_state_changed.h>
+
 #include <zmk/events/layer_state_changed.h>
 #include <zmk/events/activity_state_changed.h>
 #include <zmk/events/usb_conn_state_changed.h>
@@ -186,7 +187,7 @@ static void zmk_rgb_underglow_effect_swirl() {
 
 void simulate_rgb_keypress(uint32_t keycode) {
     // Create a keycode_state_changed event for key press
-    struct keycode_state_changed key_press_event = {
+    struct zmk_keycode_state_changed key_press_event = {
         .keycode = keycode,
         .state = true,  // true for key press, false for key release
     };
