@@ -202,11 +202,11 @@ void simulate_rgb_keypress(uint32_t keycode) {
 static int zmk_rgb_underglow_layer_state_change_listener(const zmk_event_t *eh) {
     if(as_zmk_layer_state_changed(eh)->state == true) {
         for(int i = 0; i < as_zmk_layer_state_changed(eh)->layer; i++) {
-            simulate_rgb_keypress(RGB_HUI);
+            simulate_rgb_keypress(RGB_HUI_CMD);
         }
     } else {
         for(int i = 0; i < as_zmk_layer_state_changed(eh)->layer; i++) {
-            simulate_rgb_keypress(RGB_HUD);
+            simulate_rgb_keypress(RGB_HUD_CMD);
         }
     }
 

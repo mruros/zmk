@@ -11,7 +11,10 @@
     "layer_status.h": "c",
     "locale": "c",
     "string": "c",
-    "ext_power.h": "c"
+    "ext_power.h": "c",
+    "rgb.h": "c",
+    "rgb_underglow.h": "c",
+    "keymap.h": "c"
   },
   "python.formatting.provider": "black",
   "cmake.sourceDirectory": "${workspaceFolder}/app"
