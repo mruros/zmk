@@ -23,8 +23,6 @@
 #include <zmk/activity.h>
 #include <zmk/usb.h>
 #include <zmk/event_manager.h>
-#include <zmk/events/keycode_state_changed.h>
-#include <zmk/events/layer_state_changed.h>
 #include <zmk/events/activity_state_changed.h>
 #include <zmk/events/usb_conn_state_changed.h>
 
@@ -177,27 +175,6 @@ static void zmk_rgb_underglow_effect_swirl() {
     state.animation_step += state.animation_speed * 2;
     state.animation_step = state.animation_step % HUE_MAX;
 }
-
-#if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
-
-static int zmk_rgb_underglow_layer_state_change_listener(const zmk_event_t *eh) {
-    struct zmk_layer_state_changed *layer_change = as_zmk_layer_state_changed(eh);
-    struct zmk_led_hsb color;
-    if(layer_change->state == true) {
-        color = zmk_rgb_underglow_calc_hue(1 * layer_change->layer);
-    } else {
-        color = zmk_rgb_underglow_calc_hue(-1 * layer_change->layer);
-    }
-    zmk_rgb_underglow_set_hsb(color);
-    // the following syncs the state of the underglow on both sides
-    zmk_rgb_underglow_save_state();
-
-    return 0;
-}
-
-ZMK_LISTENER(underglow_layer_change, zmk_rgb_underglow_layer_state_change_listener);
-ZMK_SUBSCRIPTION(underglow_layer_change, zmk_layer_state_changed);
-#endif
 
 static void zmk_rgb_underglow_effect_custom() {
     // // Turn off all LEDs
