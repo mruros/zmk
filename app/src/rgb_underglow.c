@@ -179,15 +179,10 @@ static void zmk_rgb_underglow_effect_swirl() {
 #if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
 
 static int zmk_rgb_underglow_layer_state_change_listener(const zmk_event_t *eh) {
-    uint8_t highest_layer_active = zmk_keymap_highest_layer_active();
-    int layer_modifier = 60;
-
-    struct zmk_led_hsb layer_shifted_hsb = {h : 0, s : state.color.s, b : state.color.b};
-
-    if (state.color.h >= highest_layer_active * layer_modifier) {
-        layer_shifted_hsb.h = state.color.h - highest_layer_active * layer_modifier;
+    if(ev.state == true) {
+        struct zmk_led_hsb color = zmk_rgb_underglow_calc_hue(1 * eh.layer);
     } else {
-        layer_shifted_hsb.h = state.color.h + (HUE_MAX - highest_layer_active * layer_modifier);
+        struct zmk_led_hsb color = zmk_rgb_underglow_calc_hue(-1 * eh.layer);
     }
 
     zmk_rgb_underglow_set_hsb(layer_shifted_hsb);

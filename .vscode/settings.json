@@ -8,7 +8,9 @@
     "*.overlay": "dts",
     "*.keymap": "dts",
     "layer_state_changed.h": "c",
-    "layer_status.h": "c"
+    "layer_status.h": "c",
+    "locale": "c",
+    "string": "c"
   },
   "python.formatting.provider": "black",
   "cmake.sourceDirectory": "${workspaceFolder}/app"
