@@ -185,11 +185,11 @@ static void zmk_rgb_underglow_effect_swirl() {
 
 #if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
 
-void simulate_rgb_keypress(uint32_t keycode) {
+void simulate_rgb_keypress(bool increase) {
     // Create a keycode_state_changed event for key press
     struct zmk_keycode_state_changed key_press_event = {
-        .keycode = keycode,
-        .state = true,  // true for key press, false for key release
+        .behavior_dev = DEVICE_DT_GET(zmk_behavior_rgb_underglow),
+        .param1 = increase ? RGB_HUI : RGB_HUD,
     };
 
     // Emit the key_press_event
@@ -202,11 +202,11 @@ void simulate_rgb_keypress(uint32_t keycode) {
 static int zmk_rgb_underglow_layer_state_change_listener(const zmk_event_t *eh) {
     if(as_zmk_layer_state_changed(eh)->state == true) {
         for(int i = 0; i < as_zmk_layer_state_changed(eh)->layer; i++) {
-            simulate_rgb_keypress(RGB_HUI_CMD);
+            simulate_rgb_keypress(true);
         }
     } else {
         for(int i = 0; i < as_zmk_layer_state_changed(eh)->layer; i++) {
-            simulate_rgb_keypress(RGB_HUD_CMD);
+            simulate_rgb_keypress(false);
         }
     }
 
