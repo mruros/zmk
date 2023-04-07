@@ -176,6 +176,8 @@ static void zmk_rgb_underglow_effect_swirl() {
     state.animation_step = state.animation_step % HUE_MAX;
 }
 
+#if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
+
 static int zmk_rgb_underglow_layer_state_change_listener(const zmk_event_t *eh) {
     uint8_t highest_layer_active = zmk_keymap_highest_layer_active();
     int layer_modifier = 60;
@@ -195,6 +197,7 @@ static int zmk_rgb_underglow_layer_state_change_listener(const zmk_event_t *eh) 
 
 ZMK_LISTENER(underglow_layer_change, zmk_rgb_underglow_layer_state_change_listener);
 ZMK_SUBSCRIPTION(underglow_layer_change, zmk_layer_state_changed);
+#endif
 
 static void zmk_rgb_underglow_effect_custom() {
     // // Turn off all LEDs
