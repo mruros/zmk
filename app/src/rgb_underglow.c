@@ -181,9 +181,19 @@ static void zmk_rgb_underglow_effect_custom() {
     //     pixels[i] = hsb_to_rgb(hsb_scale_zero_max(hsb));
     // }
 
+    uint8_t highest_layer_active = zmk_keymap_highest_layer_active();
+    int layer_modifier = 60;
     // Turn on all LEDs
     for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
-        pixels[i] = hsb_to_rgb(hsb_scale_min_max(state.color));
+        struct zmk_led_hsb layer_shifted_hsb = {h : 0, s : state.color.s, b : state.color.b};
+
+        if (state.color.h >= highest_layer_active * layer_modifier) {
+            layer_shifted_hsb.h = state.color.h - highest_layer_active * layer_modifier;
+        } else {
+            layer_shifted_hsb.h = state.color.h + (HUE_MAX - highest_layer_active * layer_modifier);
+        }
+
+        pixels[i] = hsb_to_rgb(hsb_scale_min_max(layer_shifted_hsb));
     }
 
     // and turn on specific ones.
