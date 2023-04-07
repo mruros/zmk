@@ -193,7 +193,7 @@ int zmk_rgb_underglow_layer_state_change_listener(const zmk_event_t *eh) {
     return 0;
 }
 
-ZMK_LISTENER(zmk_rgb_underglow_layer_state_change_listener, zmk_rgb_underglow_layer_state_change_listener);
+ZMK_LISTENER(zmk_rgb_underglow_layer_state_change_listener, layer_state_changed_listener);
 ZMK_SUBSCRIPTION(zmk_rgb_underglow_layer_state_change_listener, zmk_layer_state_changed);
 
 static void zmk_rgb_underglow_effect_custom() {
