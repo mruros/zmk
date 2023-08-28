@@ -209,8 +209,6 @@ static void zmk_rgb_underglow_effect_custom() {
                 hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
         }
     }
-
-    }
 }
 
 static void zmk_rgb_underglow_tick(struct k_work *work) {
