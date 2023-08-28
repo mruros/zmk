@@ -53,9 +53,6 @@ struct active_sticky_key {
 
 struct active_sticky_key active_sticky_keys[ZMK_BHV_STICKY_KEY_MAX_HELD] = {};
 
-bool last_state_of_sticky_ctrl = false;
-bool last_state_of_sticky_alt = false;
-bool last_state_of_sticky_gui = false;
 
 static struct active_sticky_key *store_sticky_key(uint32_t position, uint32_t param1,
                                                   uint32_t param2,
@@ -105,13 +102,6 @@ static inline int press_sticky_key_behavior(struct active_sticky_key *sticky_key
         .timestamp = timestamp,
     };
 
-    if(sticky_key->param1 == LCTRL) {
-        last_state_of_sticky_ctrl = true;
-    } else if(sticky_key->param1 == LALT) {
-        last_state_of_sticky_alt = true;
-    } else if(sticky_key->param1 == LGUI) {
-        last_state_of_sticky_gui = true;
-    }
 
     return behavior_keymap_binding_pressed(&binding, event);
 }
@@ -129,14 +119,6 @@ static inline int release_sticky_key_behavior(struct active_sticky_key *sticky_k
     };
 
     clear_sticky_key(sticky_key);
-
-    if(sticky_key->param1 == LCTRL) {
-        last_state_of_sticky_ctrl = false;
-    } else if(sticky_key->param1 == LALT) {
-        last_state_of_sticky_alt = false;
-    } else if(sticky_key->param1 == LGUI) {
-        last_state_of_sticky_gui = false;
-    }
 
     return behavior_keymap_binding_released(&binding, event);
 }
