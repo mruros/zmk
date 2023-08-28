@@ -8,7 +8,6 @@
 #include <zephyr/init.h>
 #include <zephyr/kernel.h>
 #include <zephyr/settings/settings.h>
-#include <zephyr/zmk/keymap.h>
 
 #include <math.h>
 #include <stdlib.h>
@@ -19,6 +18,7 @@
 #include <drivers/ext_power.h>
 
 #include <zmk/rgb_underglow.h>
+#include <zmk/keymap.h>
 
 #include <zmk/activity.h>
 #include <zmk/usb.h>
