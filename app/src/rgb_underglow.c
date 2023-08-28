@@ -30,7 +30,6 @@
 #include <zmk/battery.h>
 #include <zmk/endpoints.h>
 #include <zmk/ble.h>
-#include <zmk/sticky_key.h>
 
 
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
