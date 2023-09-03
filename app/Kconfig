@@ -285,7 +285,7 @@ config ZMK_RGB_UNDERGLOW_STATUS_BATTERY
 config ZMK_RGB_UNDERGLOW_STATUS_BATTERY_N
 	int "LED number to show the battery status, extending to the next 4 LEDs"
 	range 0 ZMK_RGB_UNDERGLOW_NUM_LEDS
-	default 0
+	default 27
 	depends on ZMK_RGB_UNDERGLOW_STATUS_BATTERY
 
 #ZMK_RGB_UNDERGLOW
