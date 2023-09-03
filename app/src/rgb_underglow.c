@@ -192,7 +192,7 @@ static void zmk_rgb_underglow_effect_custom() {
 
     // ------- Turn on the battery status led -------
     if (IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY)) {
-        int battery_slices = 5;
+        int battery_slices = 3;
         for (int i = 0; i < battery_slices; i++) {
             // 0 = red, 60 = yellow, 120 = green
             int hue = 0;
